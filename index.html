@@ -11,8 +11,23 @@
 
   .scene {
     display: flex; align-items: center; justify-content: center;
+    flex-direction:column;
+    gap:34px;
     min-height: 100vh; min-height: 100dvh; padding: 40px 20px;
     perspective: 1200px; font-family: 'Playfair Display', serif;
+  }
+
+  .home-title {
+    color:#8a3050;
+    font-family:"Pinyon Script","STKaiti","KaiTi","Microsoft YaHei",serif;
+    font-size:clamp(44px,9vw,78px);
+    font-weight:400;
+    line-height:1;
+    text-align:center;
+    letter-spacing:0;
+    text-shadow:
+      0 2px 0 rgba(255,255,255,0.72),
+      0 12px 28px rgba(150,50,80,0.18);
   }
 
   .envelope-wrap {
@@ -309,6 +324,18 @@
     color:#9b9b9b;
     font-size:13px;
     margin:10px 0 18px;
+  }
+  .system-message {
+    width:fit-content;
+    max-width:calc(100% - 88px);
+    margin:18px auto 26px;
+    padding:3px 9px;
+    border-radius:4px;
+    background:rgba(0,0,0,0.05);
+    line-height:1.45;
+  }
+  .message-row + .system-message {
+    margin-top:26px;
   }
   .message-row {
     display:flex;
@@ -695,7 +722,8 @@
     animation:pinDrop 0.7s cubic-bezier(0.22,1,0.36,1) 0.18s both;
     cursor:pointer;
     transition:transform 0.22s ease, box-shadow 0.22s ease;
-  }  .photo-card:hover {
+  }
+  .photo-card:hover {
     transform:rotate(var(--tilt)) translateY(-3px);
     box-shadow:0 18px 34px rgba(89,54,27,0.32);
   }
@@ -711,6 +739,53 @@
     object-fit:cover;
     border-radius:2px;
     background:#eee;
+  }
+  .letter-card {
+    --tilt:2deg;
+    padding:10px 10px 28px;
+  }
+  .pinned-letter-preview {
+    position:relative;
+    aspect-ratio:3/4.2;
+    border-radius:2px;
+    overflow:hidden;
+    background:
+      linear-gradient(90deg,rgba(224,156,172,0.26) 0 1px,transparent 1px 100%),
+      repeating-linear-gradient(180deg,transparent 0 24px,rgba(239,183,197,0.42) 25px 26px),
+      #fff8ef;
+    box-shadow:inset 0 0 0 1px rgba(168,105,70,0.12);
+  }
+  .pinned-letter-preview::before {
+    content:'';
+    position:absolute;
+    inset:16px 18px auto;
+    height:44px;
+    border-radius:50%;
+    border-top:1px solid rgba(144,88,65,0.28);
+    transform:rotate(-8deg);
+  }
+  .pinned-letter-preview::after {
+    content:'To my love';
+    position:absolute;
+    left:16px;
+    right:16px;
+    top:76px;
+    color:#8a563d;
+    font-family:"Pinyon Script",cursive;
+    font-size:28px;
+    line-height:1.05;
+    text-align:center;
+  }
+  .letter-seal {
+    position:absolute;
+    left:50%;
+    bottom:28px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    transform:translateX(-50%) rotate(-8deg);
+    background:radial-gradient(circle at 38% 34%,#f391a7,#c83c68 62%,#8a1e42);
+    box-shadow:0 4px 9px rgba(92,42,26,0.2);
   }
   .photo-caption {
     position:absolute;
@@ -753,10 +828,11 @@
     font-size:13px;
     font-weight:600;
   }
-  .photo-lightbox {
-    position:absolute;
+  .photo-lightbox,
+  .letter-lightbox {
+    position:fixed;
     inset:0;
-    z-index:30;
+    z-index:220;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -766,7 +842,8 @@
     pointer-events:none;
     transition:opacity 0.28s ease;
   }
-  .photo-lightbox.active {
+  .photo-lightbox.active,
+  .letter-lightbox.active {
     opacity:1;
     pointer-events:all;
   }
@@ -790,6 +867,49 @@
     max-height:calc(78vh - 46px);
     object-fit:contain;
     border-radius:2px;
+  }
+  .love-letter-sheet {
+    width:min(78vw,520px);
+    max-height:78vh;
+    overflow:auto;
+    padding:44px 42px 48px;
+    border-radius:4px;
+    color:#603d32;
+    background:
+      linear-gradient(90deg,rgba(224,156,172,0.34) 0 1px,transparent 1px 100%),
+      repeating-linear-gradient(180deg,transparent 0 31px,rgba(239,183,197,0.46) 32px 33px),
+      #fff8ef;
+    background-position:54px 0,0 22px,0 0;
+    box-shadow:0 26px 70px rgba(39,20,10,0.42);
+    transform:scale(0.86) rotate(1deg);
+    transition:transform 0.28s cubic-bezier(0.2,0.9,0.2,1.1);
+    cursor:pointer;
+  }
+  .letter-lightbox.active .love-letter-sheet {
+    transform:scale(1) rotate(1deg);
+  }
+  .love-letter-title {
+    font-family:"Pinyon Script",cursive;
+    font-size:40px;
+    line-height:1;
+    color:#8a3050;
+    text-align:center;
+    margin-bottom:26px;
+  }
+  .love-letter-text {
+    font-size:16px;
+    line-height:2.05;
+    letter-spacing:0;
+  }
+  .love-letter-text p + p {
+    margin-top:12px;
+  }
+  .love-letter-sign {
+    margin-top:24px;
+    text-align:right;
+    font-family:"Pinyon Script",cursive;
+    font-size:34px;
+    color:#8a3050;
   }
   @keyframes pinDrop {
     0% { opacity:0; transform:translateY(-18px) rotate(-1deg) scale(0.9); }
@@ -820,26 +940,91 @@
     .image-message { width:112px; }
     .image-message.square { height:112px; }
     .image-message.wide { width:132px; }
+    .memory-wall-page {
+      justify-content:center;
+      padding:18px;
+      overflow:hidden;
+    }
     .felt-frame {
-      height:84vh;
+      width:920px;
+      min-width:920px;
+      height:min(560px,calc(100dvw * 1.28));
       border-width:14px;
-      padding:48px 18px 36px;
+      padding:48px 24px 36px;
     }
     .photo-grid {
-      column-width:clamp(126px,42vw,168px);
-      column-gap:16px;
+      column-width:150px;
+      column-gap:22px;
     }
     .photo-card {
-      max-width:168px;
+      max-width:178px;
+    }
+    .love-letter-sheet {
+      width:min(88vw,380px);
+      padding:36px 28px 42px;
+    }
+    .love-letter-title {
+      font-size:34px;
+    }
+    .love-letter-text {
+      font-size:15px;
+      line-height:1.9;
+    }
+  }
+  @media (max-width:520px) and (orientation:portrait) {
+    .memory-wall-page {
+      inset:0 auto auto 0;
+      width:100dvh;
+      height:100dvw;
+      padding:12px;
+      transform:rotate(90deg) translateY(-100%) scale(1.03);
+      transform-origin:top left;
+    }
+    .memory-wall-page.active {
+      transform:rotate(90deg) translateY(-100%) scale(1);
+    }
+    .felt-frame {
+      width:calc(100dvh - 24px);
+      min-width:0;
+      height:calc(100dvw - 24px);
+      padding:46px clamp(18px,3vw,28px) 34px;
+    }
+    .photo-grid {
+      column-width:clamp(132px,18dvh,176px);
+      column-gap:clamp(16px,3dvw,24px);
+    }
+    .photo-card {
+      max-width:186px;
+      margin-bottom:24px;
+    }
+  }
+  @media (max-height:520px) and (orientation:landscape) {
+    .memory-wall-page {
+      padding:12px;
+      overflow:hidden;
+    }
+    .felt-frame {
+      width:calc(100vw - 24px);
+      min-width:0;
+      height:calc(100dvh - 24px);
+      border-width:14px;
+      padding:46px clamp(18px,3vw,28px) 34px;
+    }
+    .photo-grid {
+      column-width:clamp(132px,16vw,180px);
+      column-gap:clamp(16px,2.4vw,24px);
+    }
+    .photo-card {
+      max-width:186px;
+      margin-bottom:24px;
     }
   }
 </style>
 </head>
 <body>
 
-<h2 class="sr-only">浅粉色情书信封，蜡封居中，小雏菊斜靠在旁，点击打开</h2>
-
 <div class="scene">
+  <h1 class="home-title">一封情书</h1>
   <div class="envelope-wrap" id="envelopeWrap">
     <div class="envelope-body">
       <div class="flap-left"></div>
@@ -1141,22 +1326,22 @@
     </div>
     <div class="photo-card">
       <div class="clear-pin" aria-hidden="true"></div>
-      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/IMG_20260418_193355.jpg" alt="一起吃烤肉的纪念照片">
+      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/IMG_20260418_193355.png" alt="一起吃烤肉的纪念照片">
       <div class="photo-caption">第一次一起吃饭</div>
     </div>
     <div class="photo-card">
       <div class="clear-pin" aria-hidden="true"></div>
-      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/IMG_20260418_222716.jpg" alt="酒吧桌上的礼物和酒杯">
+      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/IMG_20260418_222716.png" alt="酒吧桌上的礼物和酒杯">
       <div class="photo-caption">随便找的酒吧</div>
     </div>
     <div class="photo-card">
       <div class="clear-pin" aria-hidden="true"></div>
-      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/IMG_20260421_201012.jpg" alt="切好的牛轧糖">
+      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/IMG_20260421_201012.png" alt="切好的牛轧糖">
       <div class="photo-caption">第一次牛轧糖</div>
     </div>
     <div class="photo-card">
       <div class="clear-pin" aria-hidden="true"></div>
-      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/IMG_20260421_202540.jpg" alt="装着牛轧糖的礼物袋">
+      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/IMG_20260421_202540.png" alt="装着牛轧糖的礼物袋">
       <div class="photo-caption">太不结实的袋子</div>
     </div>
     <div class="photo-card">
@@ -1166,35 +1351,72 @@
     </div>
     <div class="photo-card">
       <div class="clear-pin" aria-hidden="true"></div>
-      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1776442562201.jpg" alt="黄油饼干伴手礼">
+      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1776442562201.png" alt="黄油饼干伴手礼">
       <div class="photo-caption">黄油饼干</div>
     </div>
     <div class="photo-card">
       <div class="clear-pin" aria-hidden="true"></div>
-      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1776490683345.jpg" alt="车上拍下的礼物袋">
+      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1776490683345.png" alt="车上拍下的礼物袋">
       <div class="photo-caption">去找你的路上</div>
     </div>
     <div class="photo-card">
       <div class="clear-pin" aria-hidden="true"></div>
-      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1777983201891.jpg" alt="桌上的酒和饮料">
+      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1777983201891.png" alt="桌上的酒和饮料">
       <div class="photo-caption">挺好喝的酒</div>
     </div>
     <div class="photo-card">
       <div class="clear-pin" aria-hidden="true"></div>
-      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1778150614167.jpg" alt="烤肉桌上的纪念照片">
+      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1778150614167.png" alt="烤肉桌上的纪念照片">
       <div class="photo-caption">美女请的烤肉</div>
     </div>
     <div class="photo-card">
       <div class="clear-pin" aria-hidden="true"></div>
-      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1778150622592.jpg" alt="牵手的温柔照片">
+      <img loading="lazy" decoding="async" fetchpriority="low" src="assets/photos/wx_camera_1778150622592.png" alt="牵手的温柔照片">
       <div class="photo-caption">和美女牵手</div>
     </div>
+<div class="photo-card letter-card" id="loveLetterCard" role="button" tabindex="0" aria-label="打开钉在照片墙上的情书">
+      <div class="clear-pin" aria-hidden="true"></div>
+      <div class="pinned-letter-preview" aria-hidden="true">
+        <span class="letter-seal"></span>
+      </div>
+      <div class="photo-caption">给宝宝的信</div>
     </div>
+    </div>
+
+
     <div class="felt-note">pinned with love</div>
     <div class="photo-lightbox" id="photoLightbox" aria-hidden="true">
       <div class="photo-lightbox-card">
         <img decoding="async" id="lightboxImage" src="" alt="放大的照片">
       </div>
+    </div>
+    <div class="letter-lightbox" id="letterLightbox" aria-hidden="true">
+      <article class="love-letter-sheet">
+        <h3 class="love-letter-title">宝宝，见字如面。</h3>
+        <div class="love-letter-text">
+          <p>这封情书其实我准备了很久。</p>
+          <p>每次想提笔的时候，脑子里总会冒出很多关于你的画面，结果反而不知道该怎么表达了。</p>
+          <p>其实我不太会写情书，但和你在一起以后，我越来越喜欢把很多小事记下来，因为我总觉得，以后一定还想再讲给你听。</p>
+          <p>最近一直在想，520应该送你什么。后来发现，比起礼物，我好像还有很多话更想告诉你，所以就把它们写进这封信里。</p>
+          <p>我一直记得我们第一次出去约会。</p>
+          <p>那天在车上的时候，我紧张了好久，一直在想见到你以后该说什么、该做什么、我今天看起来怎么样，会不会哪里表现不好。</p>
+          <p>结果真正见到你的时候，你直接给了我一个抱抱。</p>
+          <p>那一瞬间我真的有点懵了。</p>
+          <p>我到现在都记得你的样子，明媚、温柔、动人，可爱到让我觉得再多词语都形容不出来。那时候我的大脑已经兴奋到快宕机了，只剩一点理智还在支撑着我正常行动。现在想想，我当时在你眼里应该还有点笨拙吧，哈哈。</p>
+          <p>但也是从那时候开始，我越来越确定，你真的是一个特别特别好的人。</p>
+          <p>我生气的时候，你会抱着哄我；我喝多的时候，你会心疼我；我开心的时候，你也会陪着我一起笑。</p>
+          <p>这些事情你可能觉得很普通，但我其实都记得。</p>
+          <p>在遇到你之前，我一直觉得自己大概不会真正接触爱情这种东西。很多时候，我表面上对感情表现得不在乎，其实只是因为我不知道，自己能不能遇到一个真正爱我的人，也不知道自己到底值不值得被爱。</p>
+          <p>直到后来遇见你。</p>
+          <p>你让我第一次觉得，原来被人惦记、被人认真放在心里，是一件这么幸福的事情。</p>
+          <p>以前的我，其实很少认真照顾自己，但因为你，我开始想把生活过得更好一点，也开始认真去期待未来。</p>
+          <p>我以前一直觉得520这种节日多少有点形式主义，但和你在一起以后，我突然开始理解，为什么大家会想认真纪念某一天。</p>
+          <p>因为有些人，真的值得。</p>
+          <p>我知道以后我们可能还是会有吵架，会有压力，也会遇到很多乱七八糟的事情，但我还是会一直站在你这边。</p>
+          <p>希望明年的520，我还能继续给你写信。</p>
+          <p>以后我们还会一起过很多很多节日，而我也希望，未来你都会在我身边。</p>
+        </div>
+        <div class="love-letter-sign">—— 爱你的开心小狗</div></article>
     </div>
   </div>
 </div>
@@ -1209,10 +1431,12 @@
   const storyArrow = document.querySelector('.story-arrow');
   const photoLightbox = document.getElementById('photoLightbox');
   const lightboxImage = document.getElementById('lightboxImage');
+  const loveLetterCard = document.getElementById('loveLetterCard');
+  const letterLightbox = document.getElementById('letterLightbox');
   const chatMessages = document.getElementById('chatMessages');
   const chatInput = document.querySelector('.chat-input');
   const storyText = document.getElementById('storyText');
-  const storyMessage = '这是我们故事的开始，接下来让我们一起幸福';
+  const storyMessage = '这是我们故事的开始，接下来让我们一起幸福吧！！';
   const chatItems = Array.from(document.querySelectorAll('.chat-item'));
   let chatTimers = [];
   let isChatPlaying = false;
@@ -1318,6 +1542,7 @@
   });
 
   document.querySelectorAll('.photo-card').forEach(card => {
+    if (card === loveLetterCard) return;
     card.addEventListener('click', () => {
       const image = card.querySelector('img');
       if (!image) return;
@@ -1329,6 +1554,21 @@
   photoLightbox.addEventListener('click', () => {
     photoLightbox.classList.remove('active');
     photoLightbox.setAttribute('aria-hidden', 'true');
+  });
+  function openLoveLetter() {
+    letterLightbox.classList.add('active');
+    letterLightbox.setAttribute('aria-hidden', 'false');
+  }
+  loveLetterCard.addEventListener('click', openLoveLetter);
+  loveLetterCard.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openLoveLetter();
+    }
+  });
+  letterLightbox.addEventListener('click', () => {
+    letterLightbox.classList.remove('active');
+    letterLightbox.setAttribute('aria-hidden', 'true');
   });
   musicIsland.addEventListener('click', () => {
     musicIsland.classList.remove('music-pop');
