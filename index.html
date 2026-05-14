@@ -318,30 +318,29 @@
     overscroll-behavior-x:none;
   }
   .chat-messages::-webkit-scrollbar { display:none; }
-  .chat-time,
+  .chat-time {
+    text-align:center;
+    color:#9b9b9b;
+    font-size:13px;
+    margin:20px 0 16px;
+  }
   .system-message {
     text-align:center;
     color:#9b9b9b;
     font-size:13px;
-    margin:10px 0 18px;
-  }
-  .system-message {
     width:fit-content;
     max-width:calc(100% - 88px);
-    margin:18px auto 26px;
-    padding:3px 9px;
+    margin:16px auto 20px;
+    padding:4px 10px;
     border-radius:4px;
     background:rgba(0,0,0,0.05);
     line-height:1.45;
-  }
-  .message-row + .system-message {
-    margin-top:26px;
   }
   .message-row {
     display:flex;
     align-items:flex-start;
     gap:10px;
-    margin:12px 0;
+    margin:8px 0;
     max-width:100%;
   }
   .message-row.me {
@@ -915,6 +914,57 @@
     0% { opacity:0; transform:translateY(-18px) rotate(-1deg) scale(0.9); }
     100% { opacity:1; transform:translateY(0) rotate(var(--tilt)) scale(1); }
   }
+  .landscape-warning {
+    position:fixed;
+    inset:0;
+    z-index:170;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:24px;
+    background:linear-gradient(145deg,#6e4528 0%,#8e6a48 100%);
+    color:#fff;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.4s ease;
+  }
+  .landscape-warning.active {
+    opacity:1;
+    pointer-events:all;
+  }
+  .landscape-warning svg {
+    width:72px;
+    height:72px;
+    fill:#fff;
+    animation:rotatePhone 1.5s ease-in-out infinite;
+  }
+  @keyframes rotatePhone {
+    0%,100% { transform:rotate(-90deg); }
+    50% { transform:rotate(0deg); }
+  }
+  .landscape-warning p {
+    font-size:20px;
+    font-weight:600;
+    text-align:center;
+    line-height:1.5;
+  }
+  .landscape-warning button {
+    padding:14px 32px;
+    border:2px solid rgba(255,255,255,0.8);
+    border-radius:28px;
+    background:rgba(255,255,255,0.2);
+    color:#fff;
+    font-size:17px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .landscape-warning button:hover {
+    background:rgba(255,255,255,0.3);
+    transform:scale(1.04);
+  }
+
   @media (max-width:520px) {
     .scene { min-height:100vh; padding:24px 10px; }
     .envelope-wrap { width:340px; height:226px; }
@@ -931,7 +981,7 @@
     .chat-title { font-size:17px; }
     .chat-icon-btn { width:44px; height:44px; font-size:24px; }
     .chat-messages { padding:12px 12px 10px; }
-    .message-row { gap:8px; margin:10px 0; }
+    .message-row { gap:8px; margin:6px 0; }
     .chat-item.me,
     .chat-item.them { transform:translateY(14px) scale(0.98); }
     .avatar { width:36px; height:36px; }
@@ -1022,6 +1072,19 @@
 </style>
 </head>
 <body>
+
+<!-- 横屏警告遮罩 -->
+<div class="landscape-warning" id="landscapeWarning">
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="2" width="48" height="60" rx="8" fill="none" stroke="currentColor" stroke-width="3"/>
+    <rect x="22" y="6" width="20" height="4" rx="2" fill="currentColor"/>
+    <circle cx="32" cy="14" r="2" fill="currentColor"/>
+    <rect x="16" y="16" width="32" height="42" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M38 38 L48 48 M48 38 L38 48" stroke="currentColor" stroke-width="3" stroke-linecap="round" transform="rotate(90 43 43)"/>
+  </svg>
+  <p>请旋转手机<br>横屏观看</p>
+  <button id="dismissWarning">知道了</button>
+</div>
 
 <div class="scene">
   <h1 class="home-title">一封情书</h1>
@@ -1515,7 +1578,15 @@
   sealClick.addEventListener('click', openLetter);
   closeBtn.addEventListener('click', closeLetter);
   overlay.addEventListener('click', e => { if (!isChatPlaying && e.target === overlay) closeLetter(); });
+  const landscapeWarning = document.getElementById('landscapeWarning');
+  const dismissBtn = document.getElementById('dismissWarning');
+
   storyArrow.addEventListener('click', () => {
+    landscapeWarning.classList.add('active');
+  });
+
+  dismissBtn.addEventListener('click', () => {
+    landscapeWarning.classList.remove('active');
     overlay.classList.add('wall-open');
     memoryWall.classList.add('active');
     memoryWall.setAttribute('aria-hidden', 'false');
